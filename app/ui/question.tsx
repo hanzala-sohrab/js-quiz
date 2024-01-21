@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { markedHighlight } from "marked-highlight";
 import { Marked } from "marked";
 import hljs from "highlight.js";
@@ -24,8 +24,10 @@ export default function Question({
 }: {
   questionContent: Question;
 }) {
+  const [showExplanation, setShowExplanation] = useState(false);
   useEffect(() => {
-    const fun = async () => {
+    setShowExplanation(false);
+    const func = async () => {
       const questionElement = document.getElementById("question");
       const codeElement = document.getElementById("code");
       const optionsElement = document.getElementById("options");
@@ -37,16 +39,42 @@ export default function Question({
           (res, cur) => res + marked.parse(cur.text),
           ""
         );
+        const options = Array.from(optionsElement.getElementsByTagName("p"));
+        options.forEach((option, index) => {
+          option.addEventListener("click", async function (event) {
+            if (index != questionContent.correctOption) {
+              this.style.backgroundColor = "red";
+            }
+            console.log('CORR = ', questionContent.correctOption);
+            options[questionContent.correctOption].style.backgroundColor =
+              "green";
+            setShowExplanation(true);
+          });
+        });
       }
     };
-    fun();
+    func();
   }, [questionContent]);
+
+  useEffect(() => {
+    const func = async () => {
+      const explanationElement = document.getElementById("explanation");
+      if (explanationElement) {
+        explanationElement.innerHTML = await marked.parse(
+          questionContent.explanation
+        );
+      }
+    };
+    func();
+  }, [showExplanation, questionContent]);
+
   return (
     questionContent && (
       <>
         <div id="question"></div>
         <div id="code"></div>
         <div id="options"></div>
+        {showExplanation && <div id="explanation"></div>}
       </>
     )
   );

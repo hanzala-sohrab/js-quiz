@@ -33,12 +33,12 @@ export const parseAndExtractDataFromMarkdown = (markdown = '') => {
       text: '',
       code: '',
       options: [
-        { id: 'A', text: '' },
-        { id: 'B', text: '' },
-        { id: 'C', text: '' },
-        { id: 'D', text: '' }
+        { id: 0, text: '' },
+        { id: 1, text: '' },
+        { id: 2, text: '' },
+        { id: 3, text: '' }
       ],
-      correctOption: '',
+      correctOption: 0,
       explanation: ''
     };
     for (const match of Array.from(question.matchAll(regexp))) {
@@ -50,7 +50,15 @@ export const parseAndExtractDataFromMarkdown = (markdown = '') => {
       questionData.options[1].text = optionB.trim();
       questionData.options[2].text = optionC.trim();
       questionData.options[3].text = optionD.trim();
-      questionData.correctOption = correctOption.trim();
+      const temp = correctOption.trim();
+      questionData.correctOption = 0;
+      if (temp == 'B') {
+        questionData.correctOption = 1;
+      } else if (temp == 'C') {
+        questionData.correctOption = 2;
+      } else {
+        questionData.correctOption = 3;
+      }
       questionData.explanation = explanation.trim();
       // console.log(jsbeautifier(questionCode, { indent_size: 2, space_in_empty_paren: true }), '\n');
       questionsData.push(questionData);

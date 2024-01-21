@@ -8,11 +8,11 @@ export type Question = {
   text: string;
   code: string;
   options: [
-    { id: string; text: string },
-    { id: string; text: string },
-    { id: string; text: string },
-    { id: string; text: string },
+    { id: number; text: string },
+    { id: number; text: string },
+    { id: number; text: string },
+    { id: number; text: string },
   ];
-  correctOption: string;
+  correctOption: number;
   explanation: string;
 }
