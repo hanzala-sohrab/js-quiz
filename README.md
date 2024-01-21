@@ -39,4 +39,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Todo
 
-- [] Fix the markdown parser. There are still some issues with it.
+- [ ] Fix the markdown parser. There are still some issues with it.
