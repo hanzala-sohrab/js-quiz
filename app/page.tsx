@@ -30,9 +30,9 @@ export default function Home() {
 
   return (
     questions.length > 2 && (
-      <div id="quiz">
+      <div id="quiz" className="md:container md:mx-auto md:px-32 flex flex-col">
         <QuestionComponent questionContent={questions[question]} />
-        <button onClick={handleNext}>Next</button>
+        <button onClick={handleNext} className="w-fit self-center">Next</button>
       </div>
     )
   );

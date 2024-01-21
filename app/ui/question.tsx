@@ -41,6 +41,7 @@ export default function Question({
         );
         const options = Array.from(optionsElement.getElementsByTagName("p"));
         options.forEach((option, index) => {
+          option.className = 'bg-slate-50 my-2.5 px-2.5 cursor-pointer';
           option.addEventListener("click", async function (event) {
             if (index != questionContent.correctOption) {
               this.style.backgroundColor = "red";
@@ -70,12 +71,12 @@ export default function Question({
 
   return (
     questionContent && (
-      <>
-        <div id="question"></div>
-        <div id="code"></div>
-        <div id="options"></div>
+      <div>
+        <div id="question" className="text-2xl md:my-2.5"></div>
+        <div id="code" className="text-xl bg-slate-100 md:p-2.5 md:my-2.5"></div>
+        <div id="options" className="text-2xl"></div>
         {showExplanation && <div id="explanation"></div>}
-      </>
+      </div>
     )
   );
 }
