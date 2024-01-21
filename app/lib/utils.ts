@@ -22,14 +22,17 @@ export const readDataFromFile = async (fileUrl = '') => {
 
 export const parseAndExtractDataFromMarkdown = (markdown = '') => {
   let tempMD = markdown;
-  const regexp = /###### (\d+\..+?)\n+\`\`\`javascript\n([\s\S]+?)\n\`\`\`\n\n- [A-D]: .*/g;
+  const regexp = /###### (\d+\..+?)\n+\`\`\`javascript\n([\s\S]+?)\n\`\`\`\n\n- A:\s*(.+?)\n- B:\s*(.+?)\n- C:\s*(.+?)\n- D:\s*(.+?)\n[\s\S]+Answer:\s*(.+?)\n\n([\s\S]+?)<\/p>.*/g;
   const questions = tempMD.split('---');
   questions.forEach(question => {
     for (const match of Array.from(question.matchAll(regexp))) {
-      const [_, questionText, questionCode] = match;
-      console.log('\n', questionText, '\n');
+      const [_, questionText, questionCode, optionA, optionB, optionC, optionD, correctOption, explanation] = match;
+      console.log('\nQUESTION:\n', questionText, '\n');
       // console.log(jsbeautifier(questionCode, { indent_size: 2, space_in_empty_paren: true }), '\n');
-      console.log(questionCode, '\n');
+      console.log('CODE:\n', questionCode, '\n');
+      console.log('OPTIONS:\nA: ', optionA, '\nB: ', optionB, '\nC: ', optionC, '\nD: ', optionD);
+      console.log('\nCORRECT OPTION: ', correctOption);
+      console.log('\nEXPLANATION:\n', explanation);
     }
   });
 }
