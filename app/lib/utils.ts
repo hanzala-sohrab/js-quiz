@@ -1,33 +1,28 @@
 // import jsbeautifier from 'js-beautify';
 
-export const readDataFromFile = (fileUrl = '') => {
-  // Fetch data from the remote Markdown file
-  fetch(fileUrl)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Network response was not ok: ${response.status}`);
-      }
-      return response.text();
-    })
-    .then(markdownData => {
-      // Process the Markdown data
-      markdownData.replaceAll('\\', '\\\\');
-      markdownData.replaceAll('`', '\`');
-      markdownData.replaceAll('$', '\$');
-      // You can use a Markdown parser here if you want to convert it to HTML or process it further
-      return markdownData;
-    })
-    .catch(error => {
-      console.error('Error fetching remote Markdown file:', error);
-    });
-
+export const readDataFromFile = async (fileUrl = '') => {
+  try {
+    // Fetch data from the remote Markdown file
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.status}`);
+    }
+    const markdownData = await response.text();
+    // Process the Markdown data
+    markdownData.replaceAll('\\', '\\\\');
+    markdownData.replaceAll('`', '\`');
+    markdownData.replaceAll('$', '\$');
+    // You can use a Markdown parser here if you want to convert it to HTML or process it further
+    return markdownData;
+  } catch (err) {
+    console.error('Error fetching remote Markdown file:', err);
+  }
   return '';
 }
 
 export const parseAndExtractDataFromMarkdown = (markdown = '') => {
   let tempMD = markdown;
-  tempMD = tempMD.split('\n').join('');
-  const regexp = /###### (\d+\.\s+.+\?)\s*```javascript(.+)```.*/gm;
+  const regexp = /###### (\d+\..+?)\n+\`\`\`javascript\n([\s\S]+?)\n\`\`\`\n\n- [A-D]: .*/g;
   const questions = tempMD.split('---');
   questions.forEach(question => {
     for (const match of Array.from(question.matchAll(regexp))) {
