@@ -1,5 +1,7 @@
 // import jsbeautifier from 'js-beautify';
 
+import { Question } from "./definitions";
+
 export const readDataFromFile = async (fileUrl = '') => {
   try {
     // Fetch data from the remote Markdown file
@@ -21,24 +23,12 @@ export const readDataFromFile = async (fileUrl = '') => {
 }
 
 export const parseAndExtractDataFromMarkdown = (markdown = '') => {
-  const questionsData = [{
-    id: 0,
-    text: '',
-    code: '',
-    options: [
-      { id: 'A', text: '' },
-      { id: 'B', text: '' },
-      { id: 'C', text: '' },
-      { id: 'D', text: '' }
-    ],
-    correctOption: '',
-    explanation: ''
-  }];
+  const questionsData: Question[] = [];
   let tempMD = markdown;
   const regexp = /###### (\d+)\.(.+?)\n+(```javascript\n[\s\S]+?\n```)\n\n- A:\s*(.+?)\n- B:\s*(.+?)\n- C:\s*(.+?)\n- D:\s*(.+?)\n[\s\S]+Answer:\s*(.+?)\n\n([\s\S]+?)<\/p>.*/g;
   const questions = tempMD.split('---');
   questions.forEach(question => {
-    const questionData = {
+    const questionData: Question = {
       id: 0,
       text: '',
       code: '',
