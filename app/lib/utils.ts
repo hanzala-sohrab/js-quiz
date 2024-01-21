@@ -21,18 +21,50 @@ export const readDataFromFile = async (fileUrl = '') => {
 }
 
 export const parseAndExtractDataFromMarkdown = (markdown = '') => {
+  const questionsData = [{
+    id: 0,
+    text: '',
+    code: '',
+    options: [
+      { id: 'A', text: '' },
+      { id: 'B', text: '' },
+      { id: 'C', text: '' },
+      { id: 'D', text: '' }
+    ],
+    correctOption: '',
+    explanation: ''
+  }];
   let tempMD = markdown;
-  const regexp = /###### (\d+\..+?)\n+\`\`\`javascript\n([\s\S]+?)\n\`\`\`\n\n- A:\s*(.+?)\n- B:\s*(.+?)\n- C:\s*(.+?)\n- D:\s*(.+?)\n[\s\S]+Answer:\s*(.+?)\n\n([\s\S]+?)<\/p>.*/g;
+  const regexp = /###### (\d+)\.(.+?)\n+(```javascript\n[\s\S]+?\n```)\n\n- A:\s*(.+?)\n- B:\s*(.+?)\n- C:\s*(.+?)\n- D:\s*(.+?)\n[\s\S]+Answer:\s*(.+?)\n\n([\s\S]+?)<\/p>.*/g;
   const questions = tempMD.split('---');
   questions.forEach(question => {
+    const questionData = {
+      id: 0,
+      text: '',
+      code: '',
+      options: [
+        { id: 'A', text: '' },
+        { id: 'B', text: '' },
+        { id: 'C', text: '' },
+        { id: 'D', text: '' }
+      ],
+      correctOption: '',
+      explanation: ''
+    };
     for (const match of Array.from(question.matchAll(regexp))) {
-      const [_, questionText, questionCode, optionA, optionB, optionC, optionD, correctOption, explanation] = match;
-      console.log('\nQUESTION:\n', questionText, '\n');
+      const [_, questionNumber, questionText, questionCode, optionA, optionB, optionC, optionD, correctOption, explanation] = match;
+      questionData.id = parseInt(questionNumber.trim(), 10);
+      questionData.text = questionText.trim();
+      questionData.code = questionCode.trim();
+      questionData.options[0].text = optionA.trim();
+      questionData.options[1].text = optionB.trim();
+      questionData.options[2].text = optionC.trim();
+      questionData.options[3].text = optionD.trim();
+      questionData.correctOption = correctOption.trim();
+      questionData.explanation = explanation.trim();
       // console.log(jsbeautifier(questionCode, { indent_size: 2, space_in_empty_paren: true }), '\n');
-      console.log('CODE:\n', questionCode, '\n');
-      console.log('OPTIONS:\nA: ', optionA, '\nB: ', optionB, '\nC: ', optionC, '\nD: ', optionD);
-      console.log('\nCORRECT OPTION: ', correctOption);
-      console.log('\nEXPLANATION:\n', explanation);
+      questionsData.push(questionData);
     }
   });
+  return questionsData;
 }
