@@ -12,16 +12,34 @@ export default function Question({
   questionContent: Question;
 }) {
   const [showExplanation, setShowExplanation] = useState(false);
+
   useEffect(() => {
     for (let i = 0; i < 5; ++i) {
       const option = document.getElementById(`option-${i}`);
       if (option) {
-        option.style.borderColor = 'black';
-        option.style.borderWidth = '1px';
+        option.style.borderColor = "black";
+        option.style.borderWidth = "1px";
       }
     }
     setShowExplanation(false);
   }, [questionContent]);
+
+  useEffect(() => {
+    const correctOption = document.getElementById(
+      `option-${questionContent.correctOption}`
+    );
+    if (showExplanation && correctOption) {
+      correctOption.style.borderColor = "green";
+      correctOption.style.borderWidth = "4px";
+    }
+
+    return () => {
+      if (correctOption) {
+        correctOption.style.borderColor = "black";
+        correctOption.style.borderWidth = "1px";
+      }
+    };
+  }, [showExplanation, questionContent]);
 
   const syntaxTheme = oneLight;
 
@@ -47,6 +65,31 @@ export default function Question({
     },
   };
 
+  const handleOptionClick = function (event: React.MouseEvent<HTMLDivElement>) {
+    const el = event.target as HTMLDivElement;
+    const parentEl = "parentElement" in el && el.parentElement;
+    const userAnswer =
+      "id" in el && el.id != ""
+        ? el.id
+        : parentEl && "id" in parentEl
+        ? parentEl.id
+        : "";
+    const userOption = parseInt(
+      String(userAnswer).match(/option-(.*?)$/)?.[1] ?? "",
+      10
+    );
+    if (userOption != questionContent.correctOption) {
+      if (el.id == "" && parentEl) {
+        parentEl.style.borderColor = "red";
+        el.parentElement.style.borderWidth = "4px";
+      } else {
+        el.style.borderColor = "red";
+        el.style.borderWidth = "4px";
+      }
+    }
+    setShowExplanation(true);
+  };
+
   return (
     questionContent && (
       <>
@@ -65,31 +108,7 @@ export default function Question({
             option.text && (
               <div
                 key={option.id}
-                onClick={function (event) {
-                  const el = event.target;
-                  const userAnswer =
-                    "id" in el && el.id != ""
-                      ? el.id
-                      : "parentElement" in el &&
-                        "id" in el.parentElement &&
-                        el.parentElement.id != ""
-                      ? el.parentElement.id
-                      : "";
-                  const userOption = parseInt(
-                    String(userAnswer).match(/option-(.*?)$/)?.[1] ?? "",
-                    10
-                  );
-                  if (userOption != questionContent.correctOption) {
-                    if (el.id == "") {
-                      el.parentElement.style.borderColor = "red";
-                      el.parentElement.style.borderWidth = "4px";
-                    } else {
-                      el.style.borderColor = "red";
-                      el.style.borderWidth = "4px";
-                    }
-                  }
-                  setShowExplanation(true);
-                }}
+                onClick={handleOptionClick}
                 className="text-xl border-[1px] border-black hover:bg-slate-50 my-2.5 p-2.5 cursor-pointer min-h-10 align-middle"
                 id={`option-${option.id}`}
               >
