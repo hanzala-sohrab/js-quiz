@@ -11,7 +11,7 @@ import { Question } from "./lib/definitions";
 let questionTemplate: Question;
 
 export default function Home() {
-  const [question, setQuestion] = useState(1);
+  const [question, setQuestion] = useState(0);
   const [questions, setQuestions] = useState([questionTemplate]);
 
   useEffect(() => {

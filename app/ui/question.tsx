@@ -46,7 +46,6 @@ export default function Question({
             if (index != questionContent.correctOption) {
               this.style.backgroundColor = "red";
             }
-            console.log('CORR = ', questionContent.correctOption);
             options[questionContent.correctOption].style.backgroundColor =
               "green";
             setShowExplanation(true);
