@@ -41,7 +41,7 @@ export default function Question({
         );
         const options = Array.from(optionsElement.getElementsByTagName("p"));
         options.forEach((option, index) => {
-          option.className = 'bg-slate-50 my-2.5 px-2.5 cursor-pointer';
+          option.className = 'bg-slate-50 hover:bg-slate-100 my-2.5 px-2.5 cursor-pointer';
           option.addEventListener("click", async function (event) {
             if (index != questionContent.correctOption) {
               this.style.backgroundColor = "red";
