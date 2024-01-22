@@ -1,5 +1,3 @@
-// import jsbeautifier from 'js-beautify';
-
 import { Question } from "./definitions";
 
 export const readDataFromFile = async (fileUrl = '') => {
@@ -20,6 +18,29 @@ export const readDataFromFile = async (fileUrl = '') => {
     console.error('Error fetching remote Markdown file:', err);
   }
   return '';
+}
+
+/**
+ * Shuffle a Question[] using the Fisher-Yates (aka Knuth) Shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle).
+ * @param array Question[]
+ * @returns The shuffled array
+ */
+const shuffle = (array: Question[]) => {
+  let currentIndex = array.length, randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
 }
 
 export const parseAndExtractDataFromMarkdown = (markdown = '') => {
@@ -52,7 +73,6 @@ export const parseAndExtractDataFromMarkdown = (markdown = '') => {
     const optionC = question.match(optionCRegex)?.[1];
     const optionD = question.match(optionDRegex)?.[1];
     const optionE = question.match(optionERegex)?.[1];
-    console.log({ optionA, optionB, optionC, optionD, optionE });
 
     for (const match of Array.from(question.matchAll(regexp))) {
       const [_, questionNumber, questionText, questionCode, correctOption, explanation] = match;
@@ -76,9 +96,8 @@ export const parseAndExtractDataFromMarkdown = (markdown = '') => {
         questionData.correctOption = 4;
       }
       questionData.explanation = explanation.trim();
-      // console.log(jsbeautifier(questionCode, { indent_size: 2, space_in_empty_paren: true }), '\n');
       questionsData.push(questionData);
     }
   });
-  return questionsData;
+  return shuffle(questionsData);
 }
