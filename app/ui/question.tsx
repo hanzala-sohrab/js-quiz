@@ -1,23 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { markedHighlight } from "marked-highlight";
-import { Marked } from "marked";
-import hljs from "highlight.js";
+import { HTMLAttributes, useEffect, useState } from "react";
 import { Question } from "../lib/definitions";
-const marked = new Marked(
-  markedHighlight({
-    langPrefix: "hljs language-",
-    highlight(code) {
-      return hljs.highlightAuto(code, [
-        "javascript",
-        "html",
-        "plaintext",
-        "css",
-      ]).value;
-    },
-  })
-);
+import Markdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function Question({
   questionContent,
@@ -27,62 +14,68 @@ export default function Question({
   const [showExplanation, setShowExplanation] = useState(false);
   useEffect(() => {
     setShowExplanation(false);
-    const func = async () => {
-      const questionElement = document.getElementById("question");
-      const codeElement = document.getElementById("code");
-      const optionsElement = document.getElementById("options");
-
-      if (questionElement && codeElement && optionsElement) {
-        questionElement.innerHTML = await marked.parse(questionContent.text);
-        codeElement.innerHTML = await marked.parse(questionContent.code);
-        optionsElement.innerHTML = questionContent.options.reduce(
-          (res, cur) => res + marked.parse(cur.text),
-          ""
-        );
-        const options = Array.from(optionsElement.getElementsByTagName("p"));
-        options.forEach((option, index) => {
-          option.className =
-            "bg-slate-100 hover:bg-slate-200 my-2.5 p-2.5 cursor-pointer min-h-10 align-middle";
-          option.addEventListener("click", async function (event) {
-            if (index != questionContent.correctOption) {
-              this.style.backgroundColor = "red";
-            }
-            options[questionContent.correctOption].style.backgroundColor =
-              "green";
-            setShowExplanation(true);
-          });
-        });
-      }
-    };
-    func();
   }, [questionContent]);
 
-  useEffect(() => {
-    const func = async () => {
-      const explanationElement = document.getElementById("explanation-text");
-      if (explanationElement) {
-        explanationElement.innerHTML = await marked.parse(
-          questionContent.explanation
-        );
-      }
-    };
-    func();
-  }, [showExplanation, questionContent]);
+  const syntaxTheme = oneLight;
+
+  const MarkdownComponents = {
+    code(props: HTMLAttributes<HTMLElement>) {
+      const { children, className, ...rest } = props;
+      const match = /language-(\w+)/.exec(className || "");
+
+      return match ? (
+        <SyntaxHighlighter
+          {...rest}
+          PreTag="div"
+          language={match[1]}
+          style={syntaxTheme}
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+      ) : (
+        <code {...rest} className={`${className} inline-code`}>
+          {children}
+        </code>
+      );
+    },
+  };
 
   return (
     questionContent && (
       <div>
-        <div id="question" className="text-2xl md:my-5"></div>
-        <div
-          id="code"
-          className="text-xl bg-slate-200 md:p-2.5 md:my-2.5"
-        ></div>
+        <Markdown className="text-2xl md:mt-5" components={MarkdownComponents}>
+          {questionContent.text}
+        </Markdown>
+        <Markdown
+          className="text-xl md:py-2.5 md:my-2.5"
+          components={MarkdownComponents}
+        >
+          {questionContent.code}
+        </Markdown>
         <p className="text-2xl my-5">Your options are:</p>
-        <div id="options" className="text-xl"></div>
+        {questionContent.options.map(
+          (option) =>
+            option.text && (
+              <ul
+                key={option.id}
+                onClick={function (event) {}}
+                className="text-xl"
+              >
+                <Markdown
+                  className="border-[1px] border-black hover:bg-slate-50 my-2.5 p-2.5 cursor-pointer min-h-10 align-middle"
+                  components={MarkdownComponents}
+                >
+                  {option.text}
+                </Markdown>
+              </ul>
+            )
+        )}
         {showExplanation && (
           <div id="explanation" className="my-5">
             <p className="text-2xl font-bold mb-3">Explanation</p>
-            <div id="explanation-text" className="text-xl"></div>
+            <Markdown className="text-xl">
+              {questionContent.explanation}
+            </Markdown>
           </div>
         )}
       </div>
