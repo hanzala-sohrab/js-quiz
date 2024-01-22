@@ -13,6 +13,13 @@ export default function Question({
 }) {
   const [showExplanation, setShowExplanation] = useState(false);
   useEffect(() => {
+    for (let i = 0; i < 5; ++i) {
+      const option = document.getElementById(`option-${i}`);
+      if (option) {
+        option.style.borderColor = 'black';
+        option.style.borderWidth = '1px';
+      }
+    }
     setShowExplanation(false);
   }, [questionContent]);
 
@@ -42,7 +49,7 @@ export default function Question({
 
   return (
     questionContent && (
-      <div>
+      <>
         <Markdown className="text-2xl md:mt-5" components={MarkdownComponents}>
           {questionContent.text}
         </Markdown>
@@ -56,29 +63,51 @@ export default function Question({
         {questionContent.options.map(
           (option) =>
             option.text && (
-              <ul
+              <div
                 key={option.id}
-                onClick={function (event) {}}
-                className="text-xl"
+                onClick={function (event) {
+                  const el = event.target;
+                  const userAnswer =
+                    "id" in el && el.id != ""
+                      ? el.id
+                      : "parentElement" in el &&
+                        "id" in el.parentElement &&
+                        el.parentElement.id != ""
+                      ? el.parentElement.id
+                      : "";
+                  const userOption = parseInt(
+                    String(userAnswer).match(/option-(.*?)$/)?.[1] ?? "",
+                    10
+                  );
+                  if (userOption != questionContent.correctOption) {
+                    if (el.id == "") {
+                      el.parentElement.style.borderColor = "red";
+                      el.parentElement.style.borderWidth = "4px";
+                    } else {
+                      el.style.borderColor = "red";
+                      el.style.borderWidth = "4px";
+                    }
+                  }
+                  setShowExplanation(true);
+                }}
+                className="text-xl border-[1px] border-black hover:bg-slate-50 my-2.5 p-2.5 cursor-pointer min-h-10 align-middle"
+                id={`option-${option.id}`}
               >
-                <Markdown
-                  className="border-[1px] border-black hover:bg-slate-50 my-2.5 p-2.5 cursor-pointer min-h-10 align-middle"
-                  components={MarkdownComponents}
-                >
+                <Markdown components={MarkdownComponents}>
                   {option.text}
                 </Markdown>
-              </ul>
+              </div>
             )
         )}
         {showExplanation && (
-          <div id="explanation" className="my-5">
+          <div id="explanation" className="my-5 text-xl">
             <p className="text-2xl font-bold mb-3">Explanation</p>
-            <Markdown className="text-xl">
+            <Markdown components={MarkdownComponents}>
               {questionContent.explanation}
             </Markdown>
           </div>
         )}
-      </div>
+      </>
     )
   );
 }
