@@ -41,7 +41,8 @@ export default function Question({
         );
         const options = Array.from(optionsElement.getElementsByTagName("p"));
         options.forEach((option, index) => {
-          option.className = 'bg-slate-50 hover:bg-slate-100 my-2.5 px-2.5 cursor-pointer';
+          option.className =
+            "bg-slate-100 hover:bg-slate-200 my-2.5 p-2.5 cursor-pointer min-h-10 align-middle";
           option.addEventListener("click", async function (event) {
             if (index != questionContent.correctOption) {
               this.style.backgroundColor = "red";
@@ -58,7 +59,7 @@ export default function Question({
 
   useEffect(() => {
     const func = async () => {
-      const explanationElement = document.getElementById("explanation");
+      const explanationElement = document.getElementById("explanation-text");
       if (explanationElement) {
         explanationElement.innerHTML = await marked.parse(
           questionContent.explanation
@@ -71,10 +72,19 @@ export default function Question({
   return (
     questionContent && (
       <div>
-        <div id="question" className="text-2xl md:my-2.5"></div>
-        <div id="code" className="text-xl bg-slate-100 md:p-2.5 md:my-2.5"></div>
-        <div id="options" className="text-2xl"></div>
-        {showExplanation && <div id="explanation"></div>}
+        <div id="question" className="text-2xl md:my-5"></div>
+        <div
+          id="code"
+          className="text-xl bg-slate-200 md:p-2.5 md:my-2.5"
+        ></div>
+        <p className="text-2xl my-5">Your options are:</p>
+        <div id="options" className="text-xl"></div>
+        {showExplanation && (
+          <div id="explanation" className="my-5">
+            <p className="text-2xl font-bold mb-3">Explanation</p>
+            <div id="explanation-text" className="text-xl"></div>
+          </div>
+        )}
       </div>
     )
   );

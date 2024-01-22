@@ -32,7 +32,7 @@ export default function Home() {
     questions.length > 2 && (
       <div id="quiz" className="md:container md:mx-auto md:px-32 flex flex-col">
         <QuestionComponent questionContent={questions[question]} />
-        <button onClick={handleNext} className="w-fit self-center">Next</button>
+        <button onClick={handleNext} className="w-fit self-center bg-black text-white px-3 rounded">Next</button>
       </div>
     )
   );
