@@ -30,10 +30,21 @@ export default function Home() {
 
   return (
     questions.length > 2 && (
-      <div id="quiz" className="md:container md:mx-auto md:px-32 flex flex-col">
-        <QuestionComponent questionContent={questions[question]} />
-        <button onClick={handleNext} className="w-fit self-center bg-black text-white px-3 rounded">Next</button>
-      </div>
+      <>
+        <div
+          id="quiz"
+          className="md:container md:mx-auto md:px-32 flex flex-col"
+        >
+          <QuestionComponent questionContent={questions[question]} />
+          <button
+            onClick={handleNext}
+            className="w-fit self-center bg-black text-white px-3 rounded"
+          >
+            Next
+          </button>
+        </div>
+        <div className="text-center fixed bottom-0 right-1">Inspired by <a href="https://github.com/lydiahallie/javascript-questions" className="font-bold">lydiahallie/javascript-questions</a></div>
+      </>
     )
   );
 }
