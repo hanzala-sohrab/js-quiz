@@ -38,12 +38,12 @@ export default function Home() {
           <QuestionComponent questionContent={questions[question]} />
           <button
             onClick={handleNext}
-            className="w-fit self-center bg-black text-white px-3 rounded"
+            className="w-fit self-center bg-black text-white px-3 rounded mb-20"
           >
             Next
           </button>
         </div>
-        <div className="text-center fixed bottom-0 right-1">Inspired by <a href="https://github.com/lydiahallie/javascript-questions" className="font-bold">lydiahallie/javascript-questions</a></div>
+        <div className="fixed bottom-0 md:right-1"><div>Inspired by</div><a href="https://github.com/lydiahallie/javascript-questions" className="font-bold">lydiahallie/javascript-questions</a></div>
       </>
     )
   );
