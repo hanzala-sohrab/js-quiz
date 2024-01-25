@@ -70,27 +70,38 @@ export default function Question({
     if (showExplanation) {
       return;
     }
-    const el = event.target as HTMLDivElement;
-    const parentEl = "parentElement" in el && el.parentElement;
-    const userAnswer =
-      "id" in el && el.id != ""
-        ? el.id
-        : parentEl && "id" in parentEl
-        ? parentEl.id
-        : "";
-    const userOption = parseInt(
-      String(userAnswer).match(/option-(.*?)$/)?.[1] ?? "",
-      10
-    );
-    if (userOption != questionContent.correctOption) {
-      if (el.id == "" && parentEl) {
-        parentEl.style.borderColor = "red";
-        el.parentElement.style.borderWidth = "4px";
-      } else {
-        el.style.borderColor = "red";
-        el.style.borderWidth = "4px";
+
+    // TODO: Do this the React way
+    const el = event.target as HTMLElement;
+    if ("parentElement" in el) {
+      let parentEl = el.parentElement as HTMLElement;
+
+      if (
+        el.tagName === "CODE" &&
+        parentEl.tagName === "P" &&
+        "parentElement" in parentEl
+      ) {
+        parentEl = parentEl.parentElement as HTMLElement;
+      }
+
+      const userAnswer = "id" in el && el.id != "" ? el.id : parentEl.id;
+
+      const userOption = parseInt(
+        String(userAnswer).match(/option-(.*?)$/)?.[1] ?? "",
+        10
+      );
+
+      if (userOption != questionContent.correctOption) {
+        if (el.id == "" && parentEl) {
+          parentEl.style.borderColor = "red";
+          parentEl.style.borderWidth = "4px";
+        } else {
+          el.style.borderColor = "red";
+          el.style.borderWidth = "4px";
+        }
       }
     }
+
     setShowExplanation(true);
   };
 
