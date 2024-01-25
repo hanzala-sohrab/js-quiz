@@ -43,7 +43,15 @@ export default function Home() {
             Next
           </button>
         </div>
-        <div className="fixed bottom-0 md:right-1"><div>Inspired by</div><a href="https://github.com/lydiahallie/javascript-questions" className="font-bold">lydiahallie/javascript-questions</a></div>
+        <div className="fixed bottom-0 md:right-1">
+          <div>Inspired by</div>
+          <a
+            href="https://github.com/lydiahallie/javascript-questions"
+            className="font-bold"
+          >
+            lydiahallie/javascript-questions
+          </a>
+        </div>
       </>
     )
   );

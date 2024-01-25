@@ -66,6 +66,10 @@ export default function Question({
   };
 
   const handleOptionClick = function (event: React.MouseEvent<HTMLDivElement>) {
+    // If any option has already been clicked, just ignore the click events
+    if (showExplanation) {
+      return;
+    }
     const el = event.target as HTMLDivElement;
     const parentEl = "parentElement" in el && el.parentElement;
     const userAnswer =
