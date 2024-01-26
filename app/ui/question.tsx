@@ -124,7 +124,9 @@ export default function Question({
               <div
                 key={option.id}
                 onClick={handleOptionClick}
-                className="text-xl border-[1px] border-black hover:bg-slate-50 my-2.5 p-2.5 cursor-pointer min-h-10 align-middle"
+                className={`text-xl border-[1px] border-black ${
+                  showExplanation ? "" : "hover:bg-slate-50 cursor-pointer"
+                } my-2.5 p-2.5 min-h-10 align-middle`}
                 id={`option-${option.id}`}
               >
                 <Markdown components={MarkdownComponents}>
